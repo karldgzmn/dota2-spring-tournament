@@ -69,8 +69,8 @@ const ROSTERS = [
     ]
   },
   {
-    team: "Unknown",
-    glyph: "?", logo: null,
+    team: "Team Unknown",
+    glyph: "TU", logo: null,
     players: [
       { name: "Kelly Cabato", captain: true },
       { name: "Christian Cabalza" },
