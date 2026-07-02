@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Clash 2026 — Dota 2 Tournament</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-mark">DOTA 2</span>
+      <span class="brand-name">Esports Club</span>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html#teams">Teams</a>
+      <a href="index.html#groupstage">Group Stage</a>
+      <a href="index.html#standings">Standings</a>
+      <a href="index.html#playoffs">Playoffs</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap hero-inner">
+    <p class="eyebrow">JULY 2026 &nbsp;·&nbsp; SIX TEAMS &nbsp;·&nbsp; ONE AEGIS</p>
+    <h1 class="hero-title">DOTA 2 Spring Tournament<span class="hero-title-year">2026</span></h1>
+    <p class="hero-sub">Round robin group stage decides the seeds. Top four survive the cut and fight it out in single elimination for the throne.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Teams</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">15</span>
+        <span class="stat-label">Group Matches</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Playoff Teams</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">1</span>
+        <span class="stat-label">Champion</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEAMS ============ -->
+<section id="teams" class="section">
+  <div class="wrap">
+    <h2 class="section-title"><span class="section-num">01</span> Teams</h2>
+    <div class="team-grid" id="teamGrid"></div>
+    <a class="btn-ghost btn-link" href="players.html">View full rosters →</a>
+  </div>
+</section>
+
+<!-- ============ GROUP STAGE ============ -->
+<section id="groupstage" class="section section-alt">
+  <div class="wrap">
+    <h2 class="section-title"><span class="section-num">02</span> Group Stage — Round Robin</h2>
+    <p class="section-desc">Every team meets every other team once across five rounds. Results are set directly in <code>script.js</code> — standings below update automatically once scores are entered there.</p>
+    <div class="round-tabs" id="roundTabs"></div>
+    <div class="rounds-wrap" id="roundsWrap"></div>
+  </div>
+</section>
+
+<!-- ============ STANDINGS ============ -->
+<section id="standings" class="section">
+  <div class="wrap">
+    <h2 class="section-title"><span class="section-num">03</span> Standings</h2>
+    <p class="section-desc">Ranked by match wins, then game/net wins. Top 4 advance to the playoff bracket — highlighted below.</p>
+    <div class="table-wrap">
+      <table class="standings-table">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th class="col-team">Team</th>
+            <th>W</th>
+            <th>L</th>
+            <th>Pts</th>
+          </tr>
+        </thead>
+        <tbody id="standingsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLAYOFFS ============ -->
+<section id="playoffs" class="section section-alt">
+  <div class="wrap">
+    <h2 class="section-title"><span class="section-num">04</span> Playoffs — Top 4 Single Elimination</h2>
+    <p class="section-desc">Seeds are pulled automatically from the standings above: 1st plays 4th, 2nd plays 3rd.</p>
+    <div class="bracket" id="bracket"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>Spring Clash 2026 · Dota 2 Community Tournament</span>
+    <span class="footer-dim">Edit teams &amp; branding in script.js</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

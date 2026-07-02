@@ -1,0 +1,663 @@
+/* =========================================================
+   SPRING CLASH 2026 — DESIGN TOKENS
+   Palette:
+     --bg        #0b0b0e  base void
+     --panel     #16161c  card surface
+     --panel-2   #1d1d25  raised surface
+     --line      #2a2a34  hairline borders
+     --gold      #c9a227  aegis gold (primary accent)
+     --gold-dim  #8a742a  muted gold
+     --blood     #9c2b3a  radiant/dire red (secondary accent)
+     --ink       #ece8de  primary text
+     --ink-dim   #918f9c  secondary text
+   Type:
+     display -> 'Rajdhani' (angular, HUD-like, used for headings)
+     body    -> 'Barlow' (clean, readable)
+     data    -> 'Barlow Condensed' (tight, for numbers/labels)
+   ========================================================= */
+
+:root {
+  --bg: #0b0b0e;
+  --panel: #16161c;
+  --panel-2: #1d1d25;
+  --line: #2a2a34;
+  --gold: #c9a227;
+  --gold-bright: #e6c04d;
+  --gold-dim: #8a742a;
+  --blood: #9c2b3a;
+  --blood-bright: #c23d4f;
+  --ink: #ece8de;
+  --ink-dim: #918f9c;
+  --win: #4c9a6a;
+  --loss: #7a4646;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(201,162,39,0.06), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(156,43,58,0.07), transparent 40%);
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+h1, h2, h3 {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+a { color: inherit; }
+
+/* subtle scanline texture over whole page, purely atmospheric */
+.scanline {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.012) 0px,
+    rgba(255,255,255,0.012) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+/* focus visibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* =========================== HEADER =========================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(11,11,14,0.86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.brand { display: flex; align-items: baseline; gap: 10px; }
+
+.brand-mark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: var(--blood-bright);
+  border: 1px solid var(--blood);
+  padding: 3px 7px;
+  border-radius: 2px;
+}
+
+.brand-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.site-nav { display: flex; gap: 28px; }
+
+.site-nav a {
+  text-decoration: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.site-nav a:hover { color: var(--gold); }
+
+.site-nav a.active-link { color: var(--gold); }
+
+/* =========================== HERO (compact variant) =========================== */
+.hero-compact { padding: 64px 0 40px; }
+.hero-title-sm { font-size: clamp(40px, 7vw, 64px); }
+
+/* =========================== TEAMS "view rosters" link =========================== */
+.btn-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* =========================== ROSTER PAGE =========================== */
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.roster-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.roster-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.roster-team-name {
+  font-size: 19px;
+  flex: 1;
+  text-transform: none;
+}
+
+.roster-count {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.roster-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+
+.roster-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--line);
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+}
+
+.roster-player:last-child { border-bottom: none; }
+
+.roster-player.is-captain {
+  background: linear-gradient(90deg, rgba(201,162,39,0.09), transparent);
+}
+
+.player-name { color: var(--ink); }
+
+.roster-player.is-captain .player-name {
+  font-weight: 600;
+  color: var(--gold-bright);
+}
+
+.captain-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* =========================== HERO =========================== */
+.hero {
+  position: relative;
+  padding: 96px 0 64px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-glow {
+  position: absolute;
+  top: -220px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(201,162,39,0.16), transparent 65%);
+  pointer-events: none;
+}
+
+.hero-inner { position: relative; }
+
+.eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  font-size: 14px;
+  color: var(--gold);
+  margin: 0 0 18px;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-size: clamp(48px, 9vw, 96px);
+  line-height: 0.92;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+.hero-title-year {
+  display: inline-block;
+  margin-left: 18px;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--blood-bright);
+  font-size: 0.55em;
+  vertical-align: middle;
+}
+
+.hero-sub {
+  max-width: 560px;
+  margin: 22px 0 0;
+  color: var(--ink-dim);
+  font-size: 17px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 56px;
+  flex-wrap: wrap;
+}
+
+.stat { display: flex; flex-direction: column; }
+
+.stat-num {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  color: var(--gold-bright);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 6px;
+}
+
+/* =========================== SECTIONS =========================== */
+.section { padding: 72px 0; }
+.section-alt { background: linear-gradient(180deg, rgba(255,255,255,0.014), transparent 40%); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 30px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.section-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  color: var(--blood-bright);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.section-desc {
+  color: var(--ink-dim);
+  max-width: 640px;
+  margin: 0 0 32px;
+  font-size: 15px;
+}
+
+/* =========================== TEAMS =========================== */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.team-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold-dim);
+  border-radius: 3px;
+  overflow: hidden;
+  transition: border-left-color 0.15s ease, transform 0.15s ease;
+}
+
+.team-card:hover { border-left-color: var(--gold); transform: translateX(2px); }
+
+.team-glyph {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--gold);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.team-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.team-glyph-fallback {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--gold);
+}
+
+.team-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+}
+
+/* =========================== ROUND TABS =========================== */
+.round-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.round-tab {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 14px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  padding: 9px 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.round-tab:hover { color: var(--ink); border-color: var(--gold-dim); }
+
+.round-tab.active {
+  color: var(--bg);
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+/* =========================== MATCH CARDS =========================== */
+.round-panel { display: none; }
+.round-panel.active { display: block; }
+
+.match-list {
+  display: grid;
+  gap: 10px;
+}
+
+.match-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto 1fr;
+  align-items: center;
+  gap: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 14px 20px;
+}
+
+.match-team {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.match-team.side-a { text-align: right; }
+.match-team.side-b { text-align: left; }
+
+.match-team.winner { color: var(--gold-bright); }
+
+.score-static {
+  min-width: 40px;
+  text-align: center;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  border-radius: 3px;
+  padding: 6px 4px;
+}
+
+.score-static.empty { color: var(--ink-dim); font-weight: 500; }
+
+.match-vs {
+  font-family: 'Barlow Condensed', sans-serif;
+  color: var(--ink-dim);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+/* =========================== STANDINGS TABLE =========================== */
+.table-wrap {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+}
+
+.standings-table th {
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 13px;
+  color: var(--ink-dim);
+  text-align: center;
+  padding: 14px 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.standings-table td {
+  text-align: center;
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--line);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+}
+
+.standings-table tr:last-child td { border-bottom: none; }
+
+.col-rank { width: 50px; }
+.col-team { text-align: left !important; }
+
+.standings-table .col-team {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+
+.standings-table tr.qualified { background: linear-gradient(90deg, rgba(201,162,39,0.09), transparent); }
+.standings-table tr.qualified .col-rank { color: var(--gold-bright); font-weight: 700; }
+
+.rank-badge {
+  display: inline-block;
+  width: 22px;
+}
+
+/* =========================== BRACKET =========================== */
+.bracket {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 32px;
+  align-items: center;
+}
+
+.bracket-col { display: flex; flex-direction: column; gap: 22px; }
+.bracket-col-final { justify-content: center; height: 100%; }
+
+.bracket-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 13px;
+  color: var(--ink-dim);
+  margin-bottom: 4px;
+}
+
+.bmatch {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bmatch-row {
+  display: grid;
+  grid-template-columns: 1fr 44px;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  gap: 10px;
+}
+
+.bmatch-row:last-child { border-bottom: none; }
+
+.bmatch-row .team-slot {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bmatch-row .team-slot.tbd { color: var(--ink-dim); font-style: italic; font-weight: 500; }
+.bmatch-row.win .team-slot { color: var(--gold-bright); }
+
+.bmatch-row .score-static { min-width: 32px; font-size: 15px; padding: 4px 4px; }
+
+.bmatch.final {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 1px rgba(201,162,39,0.15);
+}
+
+.bmatch.final .bmatch-row .team-slot { font-size: 17px; }
+
+.champion-banner {
+  margin-top: 18px;
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--gold-bright);
+  letter-spacing: 0.04em;
+  min-height: 28px;
+}
+
+/* =========================== BUTTONS =========================== */
+.btn-ghost {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 13px;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-dim);
+  padding: 10px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 22px;
+  transition: all 0.15s ease;
+}
+
+.btn-ghost:hover { color: var(--blood-bright); border-color: var(--blood); }
+
+/* =========================== FOOTER =========================== */
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0 40px;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.footer-dim { color: #5c5b64; }
+
+/* =========================== RESPONSIVE =========================== */
+@media (max-width: 720px) {
+  .site-nav { display: none; }
+  .hero { padding: 64px 0 48px; }
+  .match-card {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: 8px;
+  }
+  .match-team.side-a { text-align: left; grid-column: 1; grid-row: 1; }
+  .score-static:nth-of-type(1) { grid-column: 2; grid-row: 1; }
+  .match-vs { display: none; }
+  .match-team.side-b { text-align: left; grid-column: 1; grid-row: 2; }
+  .bracket { grid-template-columns: 1fr; }
+  .bracket-col-final { padding-top: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
