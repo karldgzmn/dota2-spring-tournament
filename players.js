@@ -52,7 +52,7 @@ const ROSTERS = [
     players: [
       { name: "Jared Mariano", captain: true },
       { name: "Jim Mariano" },
-      { name: "Jared Wenceslao" },
+      { name: "Adam Manahan" },
       { name: "Humphrey Valiente" },
       { name: "Christian Inigo" }
     ]
