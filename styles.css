@@ -529,18 +529,86 @@ input:focus-visible {
   width: 22px;
 }
 
-/* =========================== BRACKET =========================== */
-.bracket {
+/* =========================== BRACKET (double elimination) =========================== */
+.dbracket { margin-top: 8px; }
+
+.dbracket-headers {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  margin-top: 32px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.dbracket-headers-losers { margin-top: 40px; }
+
+.dbracket-header-bar {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  text-align: center;
+  padding: 10px 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+
+.dbracket-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
   align-items: center;
 }
 
-.bracket-col { display: flex; flex-direction: column; gap: 22px; }
-.bracket-col-final { justify-content: center; height: 100%; }
+.dbracket-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  height: 100%;
+}
 
+.dbracket-col-center { justify-content: center; }
+
+.dbracket-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dbracket-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  color: var(--ink-dim);
+  width: 14px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.dbracket-pair .bmatch { flex: 1; min-width: 0; }
+
+.bmatch-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(201,162,39,0.08);
+}
+
+.dbracket-reset-note {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-dim);
+  padding: 10px 4px 0 22px;
+  line-height: 1.4;
+}
+
+/* =========================== BRACKET (shared match card) =========================== */
 .bracket-label {
   font-family: 'Barlow Condensed', sans-serif;
   text-transform: uppercase;
@@ -653,8 +721,10 @@ input:focus-visible {
   .score-static:nth-of-type(1) { grid-column: 2; grid-row: 1; }
   .match-vs { display: none; }
   .match-team.side-b { text-align: left; grid-column: 1; grid-row: 2; }
-  .bracket { grid-template-columns: 1fr; }
-  .bracket-col-final { padding-top: 8px; }
+  .dbracket-headers,
+  .dbracket-row { grid-template-columns: 1fr; }
+  .dbracket-headers-losers { margin-top: 24px; }
+  .dbracket-col { gap: 14px; margin-bottom: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

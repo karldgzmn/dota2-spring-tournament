@@ -125,16 +125,33 @@ const RESULTS = [
 ];
 
 // ---- 4. PLAYOFF RESULTS — EDIT THESE BY HAND -----------------------
-// Seeds (1st-4th) are calculated automatically from RESULTS above, so
-// you only need to fill in scores here once the semifinal matchups
-// are known. "a" = higher seed in that match, "b" = lower seed.
-//   SF1 = Seed 1 vs Seed 4
-//   SF2 = Seed 2 vs Seed 3
-//   FINAL = winner of SF1 vs winner of SF2
+// Double elimination bracket. Seeds (1st-4th) are calculated
+// automatically from RESULTS above, so you only need to fill in
+// scores here once each matchup is known.
+//
+//   Match 1 (Winners R1):  Seed 1 vs Seed 4
+//   Match 2 (Winners R1):  Seed 2 vs Seed 3
+//   Match 3 (Losers R1):   Loser of 1 vs Loser of 2
+//   Match 4 (Winners Final / "Semifinal"): Winner of 1 vs Winner of 2
+//   Match 5 (Losers R2):   Winner of 3 vs Loser of 4
+//   Match 6 (Grand Final): Winner of 4 (Winners Bracket champ)
+//                           vs Winner of 5 (Losers Bracket champ)
+//   Match 7 (Bracket Reset): ONLY played if the Losers Bracket team
+//                           wins Match 6 — same two teams run it back,
+//                           since the Winners Bracket team has to lose
+//                           twice to be eliminated. Leave Match 7 blank
+//                           if Match 6 is won by the Winners Bracket
+//                           team (no reset needed, they're champions).
+//   "a" is always the score of the FIRST team listed in that match's
+//   description above, "b" is the second.
 const BRACKET_RESULTS = {
-  sf1:   { a: null, b: null },
-  sf2:   { a: null, b: null },
-  final: { a: null, b: null }
+  m1: { a: null, b: null },
+  m2: { a: null, b: null },
+  m3: { a: null, b: null },
+  m4: { a: null, b: null },
+  m5: { a: null, b: null },
+  m6: { a: null, b: null },
+  m7: { a: null, b: null }
 };
 
 // =========================================================
@@ -263,7 +280,7 @@ function renderStandings() {
   return standings;
 }
 
-// ---- 8. PLAYOFF BRACKET --------------------------------------------
+// ---- 8. PLAYOFF BRACKET (DOUBLE ELIMINATION) ------------------------
 function renderBracket(standings) {
   const bracket = document.getElementById("bracket");
 
@@ -271,58 +288,110 @@ function renderBracket(standings) {
   const groupComplete = RESULTS.flat().every(m => m.a !== null && m.b !== null && m.a !== m.b);
   const seeds = groupComplete ? standings.slice(0, 4).map(r => r.team.id) : null;
 
-  const slotName = (seedIdx) => {
-    if (!seeds) return { label: `Seed ${seedIdx + 1}`, tbd: true };
-    const t = teamById(seeds[seedIdx]);
-    return { label: t ? t.name : `Seed ${seedIdx + 1}`, tbd: !t };
+  const slot = (idOrNull, fallbackLabel) => {
+    if (!idOrNull) return { label: fallbackLabel, tbd: true };
+    const t = teamById(idOrNull);
+    return { label: t ? t.name : fallbackLabel, tbd: !t };
   };
 
-  const sf1A = slotName(0), sf1B = slotName(3); // 1st vs 4th
-  const sf2A = slotName(1), sf2B = slotName(2); // 2nd vs 3rd
+  const seed = (i) => (seeds ? seeds[i] : null);
 
-  const sf1Winner = matchWinner(BRACKET_RESULTS.sf1, seeds ? seeds[0] : null, seeds ? seeds[3] : null);
-  const sf2Winner = matchWinner(BRACKET_RESULTS.sf2, seeds ? seeds[1] : null, seeds ? seeds[2] : null);
+  // Match 1 & 2 — Winners Round 1
+  const m1A = seed(0), m1B = seed(3); // seed 1 vs seed 4
+  const m2A = seed(1), m2B = seed(2); // seed 2 vs seed 3
+  const w1 = matchWinner(BRACKET_RESULTS.m1, m1A, m1B);
+  const l1 = matchLoser(BRACKET_RESULTS.m1, m1A, m1B);
+  const w2 = matchWinner(BRACKET_RESULTS.m2, m2A, m2B);
+  const l2 = matchLoser(BRACKET_RESULTS.m2, m2A, m2B);
 
-  const finalA = sf1Winner ? teamById(sf1Winner).name : "Winner SF1";
-  const finalB = sf2Winner ? teamById(sf2Winner).name : "Winner SF2";
-  const finalAtbd = !sf1Winner;
-  const finalBtbd = !sf2Winner;
+  // Match 3 — Losers Round 1: loser of 1 vs loser of 2
+  const w3 = matchWinner(BRACKET_RESULTS.m3, l1, l2);
 
-  const champ = matchWinner(BRACKET_RESULTS.final, sf1Winner, sf2Winner);
+  // Match 4 — Winners Final ("Semifinal"): winner of 1 vs winner of 2
+  const w4 = matchWinner(BRACKET_RESULTS.m4, w1, w2); // Winners Bracket champion
+  const l4 = matchLoser(BRACKET_RESULTS.m4, w1, w2);  // drops to Losers R2
+
+  // Match 5 — Losers Round 2: winner of 3 vs loser of 4
+  const w5 = matchWinner(BRACKET_RESULTS.m5, w3, l4); // Losers Bracket champion
+
+  // Match 6 — Grand Final: Winners Bracket champ vs Losers Bracket champ
+  const w6 = matchWinner(BRACKET_RESULTS.m6, w4, w5);
+  const lowerBracketWonGF = w6 !== null && w6 === w5;
+
+  // Match 7 — Bracket Reset: only relevant if the Losers Bracket team
+  // won the Grand Final, forcing a rematch between the same two teams.
+  const w7 = lowerBracketWonGF ? matchWinner(BRACKET_RESULTS.m7, w4, w5) : null;
+
+  const champion = lowerBracketWonGF ? w7 : (w6 && !lowerBracketWonGF ? w6 : null);
+
+  const s1A = slot(m1A, "Seed 1"), s1B = slot(m1B, "Seed 4");
+  const s2A = slot(m2A, "Seed 2"), s2B = slot(m2B, "Seed 3");
+  const s3A = slot(l1, "Loser of 1"), s3B = slot(l2, "Loser of 2");
+  const s4A = slot(w1, "Winner of 1"), s4B = slot(w2, "Winner of 2");
+  const s5A = slot(w3, "Winner of 3"), s5B = slot(l4, "Loser of 4");
+  const s6A = slot(w4, "Winner of 4"), s6B = slot(w5, "Winner of Losers Bracket");
+  const s7A = slot(lowerBracketWonGF ? w4 : null, "Winner of 4");
+  const s7B = slot(lowerBracketWonGF ? w5 : null, "Winner of Losers Bracket");
 
   bracket.innerHTML = `
-    <div class="bracket-col">
-      <div>
-        <div class="bracket-label">Semifinal 1 · 1st vs 4th</div>
-        ${bmatchHTML(sf1A, sf1B, BRACKET_RESULTS.sf1)}
+    <div class="dbracket">
+      <div class="dbracket-headers">
+        <div class="dbracket-header-bar">Round 1</div>
+        <div class="dbracket-header-bar">Semifinal</div>
+        <div class="dbracket-header-bar">Finals</div>
       </div>
-      <div>
-        <div class="bracket-label">Semifinal 2 · 2nd vs 3rd</div>
-        ${bmatchHTML(sf2A, sf2B, BRACKET_RESULTS.sf2)}
+      <div class="dbracket-row">
+        <div class="dbracket-col">
+          ${dpairHTML(1, s1A, s1B, BRACKET_RESULTS.m1)}
+          ${dpairHTML(2, s2A, s2B, BRACKET_RESULTS.m2)}
+        </div>
+        <div class="dbracket-col dbracket-col-center">
+          ${dpairHTML(4, s4A, s4B, BRACKET_RESULTS.m4)}
+        </div>
+        <div class="dbracket-col dbracket-col-center">
+          ${dpairHTML(6, s6A, s6B, BRACKET_RESULTS.m6, true)}
+          ${lowerBracketWonGF ? dpairHTML(7, s7A, s7B, BRACKET_RESULTS.m7, true, "Bracket Reset") : `
+            <div class="dbracket-reset-note">Match 7 (bracket reset) only plays if the Losers Bracket team wins Match 6.</div>
+          `}
+        </div>
       </div>
-    </div>
-    <div class="bracket-col bracket-col-final">
-      <div>
-        <div class="bracket-label">Grand Final</div>
-        ${bmatchHTML({ label: finalA, tbd: finalAtbd }, { label: finalB, tbd: finalBtbd }, BRACKET_RESULTS.final, true)}
-        <div class="champion-banner">${champ ? "🏆 " + teamById(champ).name + " — Champions" : ""}</div>
+
+      <div class="dbracket-headers dbracket-headers-losers">
+        <div class="dbracket-header-bar">Losers Round 1</div>
+        <div class="dbracket-header-bar">Losers Round 2</div>
+        <div></div>
       </div>
+      <div class="dbracket-row">
+        <div class="dbracket-col">
+          ${dpairHTML(3, s3A, s3B, BRACKET_RESULTS.m3)}
+        </div>
+        <div class="dbracket-col dbracket-col-center">
+          ${dpairHTML(5, s5A, s5B, BRACKET_RESULTS.m5)}
+        </div>
+        <div class="dbracket-col"></div>
+      </div>
+
+      <div class="champion-banner">${champion ? "🏆 " + teamById(champion).name + " — Champions" : ""}</div>
     </div>
   `;
 }
 
-function bmatchHTML(slotA, slotB, score, isFinal) {
+function dpairHTML(num, slotA, slotB, score, isFinal, labelOverride) {
   const aWin = score.a !== null && score.b !== null && score.a > score.b;
   const bWin = score.a !== null && score.b !== null && score.b > score.a;
   return `
-    <div class="bmatch ${isFinal ? "final" : ""}">
-      <div class="bmatch-row ${aWin ? "win" : ""}">
-        <span class="team-slot ${slotA.tbd ? "tbd" : ""}">${slotA.label}</span>
-        ${scoreCell(slotA.tbd ? null : score.a)}
-      </div>
-      <div class="bmatch-row ${bWin ? "win" : ""}">
-        <span class="team-slot ${slotB.tbd ? "tbd" : ""}">${slotB.label}</span>
-        ${scoreCell(slotB.tbd ? null : score.b)}
+    <div class="dbracket-pair">
+      <span class="dbracket-num">${num}</span>
+      <div class="bmatch ${isFinal ? "final" : ""}">
+        ${labelOverride ? `<div class="bmatch-tag">${labelOverride}</div>` : ""}
+        <div class="bmatch-row ${aWin ? "win" : ""}">
+          <span class="team-slot ${slotA.tbd ? "tbd" : ""}">${slotA.label}</span>
+          ${scoreCell(slotA.tbd ? null : score.a)}
+        </div>
+        <div class="bmatch-row ${bWin ? "win" : ""}">
+          <span class="team-slot ${slotB.tbd ? "tbd" : ""}">${slotB.label}</span>
+          ${scoreCell(slotB.tbd ? null : score.b)}
+        </div>
       </div>
     </div>
   `;
@@ -332,6 +401,12 @@ function matchWinner(score, idA, idB) {
   if (!idA || !idB) return null;
   if (score.a === null || score.b === null || score.a === score.b) return null;
   return score.a > score.b ? idA : idB;
+}
+
+function matchLoser(score, idA, idB) {
+  if (!idA || !idB) return null;
+  if (score.a === null || score.b === null || score.a === score.b) return null;
+  return score.a > score.b ? idB : idA;
 }
 
 // ---- 9. INIT -----------------------------------------------------------
