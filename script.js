@@ -113,15 +113,15 @@ const SCHEDULE = [
 //   [{ a: 2, b: 0 }, { a: null, b: null }, { a: null, b: null }],
 const RESULTS = [
   // Round 1: [1v6, 2v5, 3v4]
-  [{ a: null, b: null }, { a: null, b: null }, { a: null, b: null }],
+  [{ a: 1, b: 0 }, { a: 0, b: 1 }, { a: 0, b: 1 }],
   // Round 2: [1v2, 3v5, 4v6]
-  [{ a: null, b: null }, { a: null, b: null }, { a: null, b: null }],
+  [{ a: 1, b: 0 }, { a: 0, b: 1 }, { a: 1, b: 0 }],
   // Round 3: [1v3, 2v6, 4v5]
-  [{ a: null, b: null }, { a: null, b: null }, { a: null, b: null }],
+  [{ a: null, b: null }, { a: 1, b: 0 }, { a: 1, b: 0 }],
   // Round 4: [1v4, 2v3, 5v6]
-  [{ a: null, b: null }, { a: null, b: null }, { a: null, b: null }],
+  [{ a: 0, b: 1 }, { a: 1, b: 0 }, { a: null, b: null }],
   // Round 5: [1v5, 2v4, 3v6]
-  [{ a: null, b: null }, { a: null, b: null }, { a: null, b: null }]
+  [{ a: 1, b: 0 }, { a: 0, b: 1 }, { a: null, b: null }]
 ];
 
 // ---- 4. PLAYOFF RESULTS — EDIT THESE BY HAND -----------------------
@@ -324,8 +324,8 @@ function renderBracket(standings) {
 
   const champion = lowerBracketWonGF ? w7 : (w6 && !lowerBracketWonGF ? w6 : null);
 
-  const s1A = slot(m1A, "Seed 1"), s1B = slot(m1B, "Seed 4");
-  const s2A = slot(m2A, "Seed 2"), s2B = slot(m2B, "Seed 3");
+  const s1A = slot(m1A, "Reloaded"), s1B = slot(m1B, "Seed 4");
+  const s2A = slot(m2A, "Nephi and Friends"), s2B = slot(m2B, "Balikbayan Kings");
   const s3A = slot(l1, "Loser of 1"), s3B = slot(l2, "Loser of 2");
   const s4A = slot(w1, "Winner of 1"), s4B = slot(w2, "Winner of 2");
   const s5A = slot(w3, "Winner of 3"), s5B = slot(l4, "Loser of 4");
@@ -351,7 +351,7 @@ function renderBracket(standings) {
         <div class="dbracket-col dbracket-col-center">
           ${dpairHTML(6, s6A, s6B, BRACKET_RESULTS.m6, true)}
           ${lowerBracketWonGF ? dpairHTML(7, s7A, s7B, BRACKET_RESULTS.m7, true, "Bracket Reset") : `
-            <div class="dbracket-reset-note">Match 7 (bracket reset) only plays if the Losers Bracket team wins Match 6.</div>
+            <div class="dbracket-reset-note">Match 7?</div>
           `}
         </div>
       </div>
