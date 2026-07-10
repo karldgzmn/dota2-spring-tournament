@@ -119,7 +119,7 @@ const RESULTS = [
   // Round 3: [1v3, 2v6, 4v5]
   [{ a: null, b: null }, { a: 1, b: 0 }, { a: 1, b: 0 }],
   // Round 4: [1v4, 2v3, 5v6]
-  [{ a: 0, b: 1 }, { a: 1, b: 0 }, { a: null, b: null }],
+  [{ a: 0, b: 1 }, { a: 1, b: 0 }, { a: 1, b: 0 }],
   // Round 5: [1v5, 2v4, 3v6]
   [{ a: 1, b: 0 }, { a: 0, b: 1 }, { a: null, b: null }]
 ];
